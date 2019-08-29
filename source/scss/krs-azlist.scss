@@ -1,0 +1,139 @@
+// Variables
+$color-primary: #283593;
+$color-light: #f5f5f5;
+$color-text: #263238;
+$duration: .15s;
+
+// mixin
+
+@mixin shadow {
+	box-shadow: 0 3px 5px -2px rgba(#000, .3);
+}
+
+.krs-azlist {
+	width: 100%;
+	font-family: "Roboto";
+	font-size: 16px;
+
+	&__headline {
+		background: $color-light;
+		color: $color-text;
+		padding:0 16px;
+		line-height: 56px;
+		font-size: 18px;
+		text-align: left;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	&__count {
+		display: block;
+		font-size: 12px;
+		font-weight: 500;
+		opacity: .5;
+	}
+
+	&__loading {
+		background: $color-light;
+		color: $color-text;
+		padding: 16px;
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	&__toggle {
+		width: 24px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: .5;
+		cursor: pointer;
+		transition: all $duration ease-in-out;
+		&:before {
+			content: "";
+			border-left: 6px solid transparent;
+			border-right: 6px solid transparent;
+			border-top: 6px solid #000;
+		}
+		&.actived {
+			transform: rotate(180deg);
+		}
+	}
+
+	&__row {
+		margin-bottom: 8px;
+	}
+	&__body {
+
+		// display: none;
+
+		// &.actived {
+		// 	display: block;
+		// 	animation: .3s itemActived forwards;
+		// }
+
+		@keyframes itemActived {
+			from {
+				transform: translateY(-10px);
+				opacity: 0;
+			} to {
+				transform: translateY(0);
+				opacity: 1;
+			}
+		}
+
+	}
+
+	&__items {
+		margin: 0;
+		padding:16px 0;
+
+
+		&.isRounded {
+			li a {
+				img {
+					border-radius: 4px;
+				}
+			}
+		}
+
+		&.isEllipses {
+			li a {
+				img {
+					border-radius: 50%;
+				}
+			}
+		}
+
+		li {
+			list-style: none;
+			border-bottom: 1px solid rgba(0,0,0,.1);
+			&:last-child {border-bottom: 0;}
+
+			a {
+				padding: 16px;
+				font-size: 14px;
+				color: $color-text;
+				text-decoration: none;
+				font-weight: 500;
+				display: flex;
+				align-items: center;
+				transition: all $duration;
+
+				&:hover {
+					color: $color-primary;
+				}
+
+				img {
+					width: 48px;
+					height: 48px;
+					object-fit: cover;
+					margin-right: 8px;
+					@include shadow;
+				}
+			}
+		}
+	}
+}
