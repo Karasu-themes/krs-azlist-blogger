@@ -4,6 +4,7 @@ class azList {
 
 		// variables base
 		let _BODY = document.body,
+			_AZ = [...'abcdefghijklmnopqrstuvwxyz'],
 			self = this,
 			_CONFIG = {
 			blogId: "blog_id",
@@ -21,10 +22,11 @@ class azList {
 			}
 		})
 		.then(result=>{
-			let obj = self.orderbyAZ(result.items),
+			let obj = self.orderbyAZ(result.items, _AZ),
 				content = document.querySelector(option.selector);
 
 			content.innerHTML="";
+			content.appendChild(self.renderNav(_AZ));
 			for (var i = 0; i < obj.length; i++) {
 				if (obj[i].items.length>0) {
 					// console.log(obj[i])
@@ -32,34 +34,22 @@ class azList {
 				}
 			}
 
-			//ejecutamos toggle;
-			if (option.isToggle || option.activedItems) self.toggle();
 		})
 	}
 
-	// muestra/oculta los items
-	toggle(){
-		let trigger = document.querySelectorAll('.krs-azlist__toggle');
-		for (var i = 0; i < trigger.length; i++) {
-			let self = trigger[i]
-			trigger[i].addEventListener('click', e=>{
-				self.classList.toggle('actived');
-				let parent = self.parentNode.parentNode.querySelector('.krs-azlist__body');
-				parent.classList.toggle('actived');
-			})
-		}
-	}
-
+	// Genera la estructura del listado
 	render(data, option){
 		let self = this;
-		function _headline(text){
+
+		function _headline(text, letter){
 			let container = document.createElement('div'),
 				count = document.createElement('span');
 
 			container.classList.add('krs-azlist__headline'),
+			container.id = letter.toLowerCase(),
 			count.classList.add('krs-azlist__count');
 
-			container.innerText = text,
+			container.innerText = text + letter,
 			count.innerText = data.items.length + ' entradas';
 			container.appendChild(count);
 
@@ -89,15 +79,31 @@ class azList {
 		let row = document.createElement('div');
 		row.classList.add('krs-azlist__row');
 
-		row.appendChild(_headline("letra "+data.letter.toUpperCase()));
+		row.appendChild(_headline("letra ",data.letter.toUpperCase()));
 		row.appendChild(_items(data.items))
 
 		return row
 	}
-	// Ordena las entradas en base a su letra y devuelve un array de objetos.
-	orderbyAZ(obj){
 
-		let alphabet = [...'abcdefghijklmnopqrstuvwxyz'],
+	/*
+		Navegación
+	*/
+	renderNav(az){
+		let container = document.createElement('div');
+			container.classList.add('krs-azlist__nav');
+		for (var i = 0; i < az.length; i++) {
+			let anchor = document.createElement('a');
+			anchor.href="#"+az[i];
+			anchor.innerText=az[i];
+			container.appendChild(anchor);
+		}
+		return container;
+	}
+
+	// Ordena las entradas en base a su letra y devuelve un array de objetos.
+	orderbyAZ(obj, az){
+
+		let alphabet = az,
 			temp=[];
 
 		for (var i = 0; i < alphabet.length; i++) {
