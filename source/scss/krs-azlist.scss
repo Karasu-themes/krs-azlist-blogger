@@ -27,6 +27,33 @@ $duration: .15s;
 		align-items: center;
 		justify-content: space-between;
 	}
+
+	&__nav {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 0;
+		flex-wrap: wrap;
+		a {
+			width: 32px;
+			line-height: 32px;
+			text-align: center;
+			border-radius: 4px;
+			font-weight: 700;
+			font-size: 12px;
+			text-decoration: none;
+			background: $color-light;
+			color: $color-text;
+			margin: 4px;
+			text-transform: uppercase;
+			transition: all $duration;
+			&:hover {
+				background: $color-primary;
+				color: #fff;
+			}
+		}
+	}
+
 	&__count {
 		display: block;
 		font-size: 12px;
