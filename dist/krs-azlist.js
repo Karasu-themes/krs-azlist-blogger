@@ -12,6 +12,7 @@ var azList = function () {
 
 		// variables base
 		var _BODY = document.body,
+		    _AZ = [].concat(_toConsumableArray('abcdefghijklmnopqrstuvwxyz')),
 		    self = this,
 		    _CONFIG = {
 			blogId: "blog_id",
@@ -27,54 +28,35 @@ var azList = function () {
 				return response.json();
 			}
 		}).then(function (result) {
-			var obj = self.orderbyAZ(result.items),
+			var obj = self.orderbyAZ(result.items, _AZ),
 			    content = document.querySelector(option.selector);
 
 			content.innerHTML = "";
+			content.appendChild(self.renderNav(_AZ));
 			for (var i = 0; i < obj.length; i++) {
 				if (obj[i].items.length > 0) {
 					// console.log(obj[i])
 					content.appendChild(self.render(obj[i], option));
 				}
 			}
-
-			//ejecutamos toggle;
-			if (option.isToggle || option.activedItems) self.toggle();
 		});
 	}
 
-	// muestra/oculta los items
+	// Genera la estructura del listado
 
 
 	_createClass(azList, [{
-		key: "toggle",
-		value: function toggle() {
-			var trigger = document.querySelectorAll('.krs-azlist__toggle');
-
-			var _loop = function _loop() {
-				var self = trigger[i];
-				trigger[i].addEventListener('click', function (e) {
-					self.classList.toggle('actived');
-					var parent = self.parentNode.parentNode.querySelector('.krs-azlist__body');
-					parent.classList.toggle('actived');
-				});
-			};
-
-			for (var i = 0; i < trigger.length; i++) {
-				_loop();
-			}
-		}
-	}, {
 		key: "render",
 		value: function render(data, option) {
 			var self = this;
-			function _headline(text) {
+
+			function _headline(text, letter) {
 				var container = document.createElement('div'),
 				    count = document.createElement('span');
 
-				container.classList.add('krs-azlist__headline'), count.classList.add('krs-azlist__count');
+				container.classList.add('krs-azlist__headline'), container.id = letter.toLowerCase(), count.classList.add('krs-azlist__count');
 
-				container.innerText = text, count.innerText = data.items.length + ' entradas';
+				container.innerText = text + letter, count.innerText = data.items.length + ' entradas';
 				container.appendChild(count);
 
 				return container;
@@ -101,21 +83,40 @@ var azList = function () {
 			var row = document.createElement('div');
 			row.classList.add('krs-azlist__row');
 
-			row.appendChild(_headline("letra " + data.letter.toUpperCase()));
+			row.appendChild(_headline("letra ", data.letter.toUpperCase()));
 			row.appendChild(_items(data.items));
 
 			return row;
 		}
+
+		/*
+  	Navegación
+  */
+
+	}, {
+		key: "renderNav",
+		value: function renderNav(az) {
+			var container = document.createElement('div');
+			container.classList.add('krs-azlist__nav');
+			for (var i = 0; i < az.length; i++) {
+				var anchor = document.createElement('a');
+				anchor.href = "#" + az[i];
+				anchor.innerText = az[i];
+				container.appendChild(anchor);
+			}
+			return container;
+		}
+
 		// Ordena las entradas en base a su letra y devuelve un array de objetos.
 
 	}, {
 		key: "orderbyAZ",
-		value: function orderbyAZ(obj) {
+		value: function orderbyAZ(obj, az) {
 
-			var alphabet = [].concat(_toConsumableArray('abcdefghijklmnopqrstuvwxyz')),
+			var alphabet = az,
 			    temp = [];
 
-			var _loop2 = function _loop2() {
+			var _loop = function _loop() {
 				var letter = alphabet[i];
 
 				var getLetter = obj.filter(function (element) {
@@ -132,7 +133,7 @@ var azList = function () {
 			};
 
 			for (var i = 0; i < alphabet.length; i++) {
-				_loop2();
+				_loop();
 			}
 
 			var asterisk = obj.filter(function (element) {
